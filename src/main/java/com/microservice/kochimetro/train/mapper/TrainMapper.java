@@ -1,6 +1,7 @@
 package com.microservice.kochimetro.train.mapper;
 
 import com.microservice.kochimetro.train.dto.request.CreateTrainRequest;
+import com.microservice.kochimetro.train.dto.request.UpdateTrainRequest;
 import com.microservice.kochimetro.train.dto.response.TrainResponse;
 import com.microservice.kochimetro.train.entity.Train;
 import com.microservice.kochimetro.train.entity.enums.TrainStatus;
@@ -19,9 +20,16 @@ public final class TrainMapper {
                 .trainNumber(request.getTrainNumber())
                 .model(request.getModel())
                 .brandingStatus(request.getBrandingStatus())
-                .mileage(0)
                 .depot(request.getDepot())
-                .status(TrainStatus.STANDBY)
+                .build();
+    }
+
+    public static Train toEntityUpdate(UpdateTrainRequest request){
+        return Train.builder()
+                .trainNumber(request.getTrainNumber())
+                .model(request.getModel())
+                .brandingStatus(request.getBrandingStatus())
+                .depot(request.getDepot())
                 .build();
     }
 
