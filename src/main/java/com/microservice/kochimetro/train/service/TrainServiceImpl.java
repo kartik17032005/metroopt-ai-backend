@@ -89,7 +89,6 @@ public class TrainServiceImpl implements TrainService {
         Train updatedTrain = trainRepository.save(existingTrain);
 
         return TrainMapper.toResponse(updatedTrain);
-
     }
 
     @Override
