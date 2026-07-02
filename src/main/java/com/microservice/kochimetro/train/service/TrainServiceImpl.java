@@ -75,9 +75,6 @@ public class TrainServiceImpl implements TrainService {
     //update the Train
     @Override
     public TrainResponse updateTrain(UUID id, UpdateTrainRequest request) {
-        if (trainRepository.existsByTrainNumber(request.getTrainNumber())) {
-            throw new BadRequestException("Train with the given train number already exists: " + request.getTrainNumber());
-        }
 
         Train existingTrain = findByIdHelper(id);
 

@@ -39,7 +39,7 @@ public class TrainController {
     //create
     @PostMapping
     public ResponseEntity<ApiResponse<TrainResponse>> createTrain(@Valid @RequestBody CreateTrainRequest request) {
-        log.info("Creating train with number: {}", request.getTrainNumber());
+        log.info("Creating train with train number: {}", request.getTrainNumber());
         TrainResponse response = trainService.createTrain(request);
         log.info(
                 "Successfully created train with ID: {}",

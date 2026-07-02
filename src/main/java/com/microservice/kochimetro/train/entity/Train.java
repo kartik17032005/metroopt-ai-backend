@@ -7,12 +7,14 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 import java.util.UUID;
 
 @Entity
 @Getter
+@EntityListeners(AuditingEntityListener.class)
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,13 +36,14 @@ public class Train {
     @Enumerated(EnumType.STRING) //without this it will store 0, 1, 2 instead of available revenue standby etc
     private TrainStatus status;
 
+    @Enumerated(EnumType.STRING)
     private Depot depot;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "branding_status")
     private BrandingStatus brandingStatus;
 
-    @Column(name = "created_At")
+    @Column(name = "created_At", updatable = false)
     @CreatedDate
     private Instant createdAt;
 
