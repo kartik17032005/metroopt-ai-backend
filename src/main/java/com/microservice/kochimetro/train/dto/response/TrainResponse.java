@@ -3,13 +3,15 @@ package com.microservice.kochimetro.train.dto.response;
 import com.microservice.kochimetro.train.entity.enums.BrandingStatus;
 import com.microservice.kochimetro.train.entity.enums.Depot;
 import com.microservice.kochimetro.train.entity.enums.TrainStatus;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 import java.util.UUID;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

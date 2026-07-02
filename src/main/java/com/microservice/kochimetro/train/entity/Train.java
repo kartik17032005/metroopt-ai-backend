@@ -1,6 +1,7 @@
 package com.microservice.kochimetro.train.entity;
 
 import com.microservice.kochimetro.train.entity.enums.BrandingStatus;
+import com.microservice.kochimetro.train.entity.enums.Depot;
 import com.microservice.kochimetro.train.entity.enums.TrainStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -33,7 +34,7 @@ public class Train {
     @Enumerated(EnumType.STRING) //without this it will store 0, 1, 2 instead of available revenue standby etc
     private TrainStatus status;
 
-    private String depot;
+    private Depot depot;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "branding_status")
