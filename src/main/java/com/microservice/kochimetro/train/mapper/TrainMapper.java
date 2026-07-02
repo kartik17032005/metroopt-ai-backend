@@ -5,9 +5,11 @@ import com.microservice.kochimetro.train.dto.response.TrainResponse;
 import com.microservice.kochimetro.train.entity.Train;
 import com.microservice.kochimetro.train.entity.enums.TrainStatus;
 
-//i receiver the request from the controller in the form of json and dto
-//but dto is not responsible for preserving data in the database
-//thats why conversion is need to convert from dto -> entity and entity -> dto
+/**
+ * Utility class responsible for converting between
+ * Train entities and Train DTOs.
+ */
+
 public final class TrainMapper {
 
     private TrainMapper(){}
@@ -23,7 +25,7 @@ public final class TrainMapper {
                 .build();
     }
 
-    public static TrainResponse toDTO(Train train){
+    public static TrainResponse toResponse(Train train){
         return TrainResponse.builder()
                 .id(train.getId())
                 .trainNumber(train.getTrainNumber())
