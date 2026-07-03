@@ -1,4 +1,4 @@
-package com.microservice.kochimetro.train.controllers;
+package com.microservice.kochimetro.train.controller;
 
 import com.microservice.kochimetro.common.response.ApiResponse;
 import com.microservice.kochimetro.train.dto.request.CreateTrainRequest;
