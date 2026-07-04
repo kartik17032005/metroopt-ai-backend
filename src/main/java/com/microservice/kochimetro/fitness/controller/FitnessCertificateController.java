@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
@@ -36,6 +37,7 @@ public class FitnessCertificateController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER')")
     public ResponseEntity<ApiResponse<FitnessCertificateResponse>> createFitnessCertificate(
             @Valid @RequestBody CreateFitnessCertificateRequest request) {
         log.info("Creating fitness certificate with number: {}", request.getCertificateNumber());
@@ -48,6 +50,7 @@ public class FitnessCertificateController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER', 'OPERATOR')")
     public ResponseEntity<ApiResponse<FitnessCertificateResponse>> getFitnessCertificateById(@PathVariable UUID id) {
         log.info("Fetching fitness certificate with ID: {}", id);
         FitnessCertificateResponse response = fitnessCertificateService.getFitnessCertificateById(id);
@@ -59,6 +62,7 @@ public class FitnessCertificateController {
     }
 
     @GetMapping("/certificate-number/{certificateNumber}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER', 'OPERATOR')")
     public ResponseEntity<ApiResponse<FitnessCertificateResponse>> getFitnessCertificateByCertificateNumber(
             @PathVariable String certificateNumber) {
         log.info("Fetching fitness certificate with number: {}", certificateNumber);
@@ -71,6 +75,7 @@ public class FitnessCertificateController {
     }
 
     @GetMapping("/train/{trainId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER', 'OPERATOR')")
     public ResponseEntity<ApiResponse<List<FitnessCertificateResponse>>> getFitnessCertificatesByTrainId(
             @PathVariable UUID trainId) {
         log.info("Fetching fitness certificates for train ID: {}", trainId);
@@ -83,6 +88,7 @@ public class FitnessCertificateController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER', 'OPERATOR')")
     public ResponseEntity<ApiResponse<List<FitnessCertificateResponse>>> getAllFitnessCertificates() {
         log.info("Fetching all fitness certificates");
         List<FitnessCertificateResponse> response = fitnessCertificateService.getAllFitnessCertificates();
@@ -94,6 +100,7 @@ public class FitnessCertificateController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER')")
     public ResponseEntity<ApiResponse<FitnessCertificateResponse>> updateFitnessCertificate(
             @PathVariable UUID id, @Valid @RequestBody UpdateFitnessCertificateRequest request) {
         log.info("Updating fitness certificate with ID: {}", id);
@@ -106,6 +113,7 @@ public class FitnessCertificateController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER')")
     public ResponseEntity<Void> deleteFitnessCertificate(@PathVariable UUID id) {
         log.info("Deleting fitness certificate with ID: {}", id);
         fitnessCertificateService.deleteFitnessCertificate(id);

@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
@@ -36,6 +37,7 @@ public class MileageRecordController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER')")
     public ResponseEntity<ApiResponse<MileageRecordResponse>> createMileageRecord(
             @Valid @RequestBody CreateMileageRecordRequest request) {
         log.info("Creating mileage record for train ID: {}", request.getTrainId());
@@ -48,6 +50,7 @@ public class MileageRecordController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER', 'OPERATOR')")
     public ResponseEntity<ApiResponse<MileageRecordResponse>> getMileageRecordById(@PathVariable UUID id) {
         log.info("Fetching mileage record with ID: {}", id);
         MileageRecordResponse response = mileageRecordService.getMileageRecordById(id);
@@ -59,6 +62,7 @@ public class MileageRecordController {
     }
 
     @GetMapping("/train/{trainId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER', 'OPERATOR')")
     public ResponseEntity<ApiResponse<List<MileageRecordResponse>>> getMileageRecordsByTrainId(
             @PathVariable UUID trainId) {
         log.info("Fetching mileage records for train ID: {}", trainId);
@@ -71,6 +75,7 @@ public class MileageRecordController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER', 'OPERATOR')")
     public ResponseEntity<ApiResponse<List<MileageRecordResponse>>> getAllMileageRecords() {
         log.info("Fetching all mileage records");
         List<MileageRecordResponse> response = mileageRecordService.getAllMileageRecords();
@@ -82,6 +87,7 @@ public class MileageRecordController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER')")
     public ResponseEntity<ApiResponse<MileageRecordResponse>> updateMileageRecord(
             @PathVariable UUID id, @Valid @RequestBody UpdateMileageRecordRequest request) {
         log.info("Updating mileage record with ID: {}", id);
@@ -94,6 +100,7 @@ public class MileageRecordController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER')")
     public ResponseEntity<Void> deleteMileageRecord(@PathVariable UUID id) {
         log.info("Deleting mileage record with ID: {}", id);
         mileageRecordService.deleteMileageRecord(id);

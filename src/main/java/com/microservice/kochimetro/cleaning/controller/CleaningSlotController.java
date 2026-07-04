@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
@@ -36,6 +37,7 @@ public class CleaningSlotController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER')")
     public ResponseEntity<ApiResponse<CleaningSlotResponse>> createCleaningSlot(
             @Valid @RequestBody CreateCleaningSlotRequest request) {
         log.info("Creating cleaning slot for train ID: {}", request.getTrainId());
@@ -48,6 +50,7 @@ public class CleaningSlotController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER', 'OPERATOR')")
     public ResponseEntity<ApiResponse<CleaningSlotResponse>> getCleaningSlotById(@PathVariable UUID id) {
         log.info("Fetching cleaning slot with ID: {}", id);
         CleaningSlotResponse response = cleaningSlotService.getCleaningSlotById(id);
@@ -59,6 +62,7 @@ public class CleaningSlotController {
     }
 
     @GetMapping("/train/{trainId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER', 'OPERATOR')")
     public ResponseEntity<ApiResponse<List<CleaningSlotResponse>>> getCleaningSlotsByTrainId(
             @PathVariable UUID trainId) {
         log.info("Fetching cleaning slots for train ID: {}", trainId);
@@ -71,6 +75,7 @@ public class CleaningSlotController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER', 'OPERATOR')")
     public ResponseEntity<ApiResponse<List<CleaningSlotResponse>>> getAllCleaningSlots() {
         log.info("Fetching all cleaning slots");
         List<CleaningSlotResponse> response = cleaningSlotService.getAllCleaningSlots();
@@ -82,6 +87,7 @@ public class CleaningSlotController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER')")
     public ResponseEntity<ApiResponse<CleaningSlotResponse>> updateCleaningSlot(
             @PathVariable UUID id, @Valid @RequestBody UpdateCleaningSlotRequest request) {
         log.info("Updating cleaning slot with ID: {}", id);
@@ -94,6 +100,7 @@ public class CleaningSlotController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER')")
     public ResponseEntity<Void> deleteCleaningSlot(@PathVariable UUID id) {
         log.info("Deleting cleaning slot with ID: {}", id);
         cleaningSlotService.deleteCleaningSlot(id);

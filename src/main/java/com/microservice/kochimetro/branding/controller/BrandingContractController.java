@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
@@ -36,6 +37,7 @@ public class BrandingContractController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<BrandingContractResponse>> createBrandingContract(
             @Valid @RequestBody CreateBrandingContractRequest request) {
         log.info("Creating branding contract for advertiser: {}", request.getAdvertiser());
@@ -48,6 +50,7 @@ public class BrandingContractController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER', 'OPERATOR')")
     public ResponseEntity<ApiResponse<BrandingContractResponse>> getBrandingContractById(@PathVariable UUID id) {
         log.info("Fetching branding contract with ID: {}", id);
         BrandingContractResponse response = brandingContractService.getBrandingContractById(id);
@@ -59,6 +62,7 @@ public class BrandingContractController {
     }
 
     @GetMapping("/train/{trainId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER', 'OPERATOR')")
     public ResponseEntity<ApiResponse<List<BrandingContractResponse>>> getBrandingContractsByTrainId(
             @PathVariable UUID trainId) {
         log.info("Fetching branding contracts for train ID: {}", trainId);
@@ -71,6 +75,7 @@ public class BrandingContractController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER', 'OPERATOR')")
     public ResponseEntity<ApiResponse<List<BrandingContractResponse>>> getAllBrandingContracts() {
         log.info("Fetching all branding contracts");
         List<BrandingContractResponse> response = brandingContractService.getAllBrandingContracts();
@@ -82,6 +87,7 @@ public class BrandingContractController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<BrandingContractResponse>> updateBrandingContract(
             @PathVariable UUID id, @Valid @RequestBody UpdateBrandingContractRequest request) {
         log.info("Updating branding contract with ID: {}", id);
@@ -94,6 +100,7 @@ public class BrandingContractController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteBrandingContract(@PathVariable UUID id) {
         log.info("Deleting branding contract with ID: {}", id);
         brandingContractService.deleteBrandingContract(id);

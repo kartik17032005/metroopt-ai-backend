@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
@@ -37,6 +38,7 @@ public class JobCardController {
 
     //get All job cards
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER', 'OPERATOR')")
     public ResponseEntity<ApiResponse<List<JobCardResponse>>> getAllJobCards() {
         log.info("Fetching all the job cards...");
 
@@ -49,6 +51,7 @@ public class JobCardController {
 
     //get job card with the id;
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER', 'OPERATOR')")
     public ResponseEntity<ApiResponse<JobCardResponse>> getJobCardById(@PathVariable UUID id) {
         log.info("Fetching the job card with the id: " + id);
         JobCardResponse jobCardResponse = jobCardService.getJobCardById(id);
@@ -58,6 +61,7 @@ public class JobCardController {
 
     //create job card
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER')")
     public ResponseEntity<ApiResponse<JobCardResponse>> createJobCard(@Valid @RequestBody CreateJobCardRequest jobCardRequest) {
         log.info("Creating job card...");
         JobCardResponse jobCardResponse = jobCardService.createJobCard(jobCardRequest);
@@ -67,6 +71,7 @@ public class JobCardController {
 
     //update job card
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER')")
     public ResponseEntity<ApiResponse<JobCardResponse>> updateJobCard(@PathVariable UUID id, @Valid @RequestBody UpdateJobCardRequest updateJobCardRequest) {
         log.info("Updating the job card with the id: " + id);
         JobCardResponse jobCardResponse = jobCardService.updateJobCard(id, updateJobCardRequest);
@@ -76,6 +81,7 @@ public class JobCardController {
 
     //get job cards by train id
     @GetMapping("/train/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER', 'OPERATOR')")
     public ResponseEntity<ApiResponse<List<JobCardResponse>>> getJobCardByTrainId(@PathVariable UUID id) {
         log.info("Fetching the job card with the train id: " + id);
         List<JobCardResponse> jobCardResponse = jobCardService.getJobCardByTrainId(id);
@@ -85,6 +91,7 @@ public class JobCardController {
 
     //delete job card
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER')")
     public ResponseEntity<ApiResponse<Void>> deleteJobCardById(@PathVariable UUID id) {
         log.info("Deleting the job card with the id: " + id);
         jobCardService.deleteJobCard(id);

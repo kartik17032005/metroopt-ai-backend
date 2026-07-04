@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
@@ -38,6 +39,7 @@ public class TrainController {
 
     //create
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<TrainResponse>> createTrain(@Valid @RequestBody CreateTrainRequest request) {
         log.info("Creating train with train number: {}", request.getTrainNumber());
         TrainResponse response = trainService.createTrain(request);
@@ -53,6 +55,7 @@ public class TrainController {
 
     //get all trains
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER' ,'OPERATOR')")
     public ResponseEntity<ApiResponse<List<TrainResponse>>> getAllTrains() {
         log.info("Fetching all the trains");
         List<TrainResponse> trains = trainService.getAllTrains();
@@ -65,6 +68,7 @@ public class TrainController {
 
     //get Train By id
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER' ,'OPERATOR')")
     public ResponseEntity<ApiResponse<TrainResponse>> getTrainById(@PathVariable UUID id) {
         log.info("Fetching the train with the id: {}", id);
         TrainResponse train = trainService.getTrainById(id);
@@ -80,6 +84,7 @@ public class TrainController {
 
     //get train by train number
     @GetMapping("/train-number/{trainNumber}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER' ,'OPERATOR')")
     public ResponseEntity<ApiResponse<TrainResponse>> getTrainByTrainNumber(@PathVariable String trainNumber) {
         log.info("Fetching the train with the trainNumber: {}", trainNumber);
         TrainResponse train = trainService.getTrainByTrainNumber(trainNumber);
@@ -95,6 +100,7 @@ public class TrainController {
 
     //update the train
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<TrainResponse>> updateTrain(@PathVariable UUID id, @Valid @RequestBody UpdateTrainRequest request) {
         log.info("Updating the train with the id:{} and the data for the particular train is: {}", id, request.getTrainNumber());
         TrainResponse response = trainService.updateTrain(id, request);
@@ -108,6 +114,7 @@ public class TrainController {
 
     //delete the train
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteTrain(@PathVariable UUID id) {
         log.info("Deleting the train with id: {}", id);
         trainService.deleteTrain(id);
