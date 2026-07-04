@@ -4,6 +4,7 @@ import com.microservice.kochimetro.auth.dto.request.LoginRequest;
 import com.microservice.kochimetro.auth.dto.request.RegisterRequest;
 import com.microservice.kochimetro.auth.dto.response.LoginResponse;
 import com.microservice.kochimetro.auth.dto.response.RegisterResponse;
+import com.microservice.kochimetro.auth.jwt.JwtService;
 import com.microservice.kochimetro.auth.mapper.AuthMapper;
 import com.microservice.kochimetro.auth.user.entity.User;
 import com.microservice.kochimetro.auth.user.repository.UserRepository;
@@ -11,6 +12,10 @@ import com.microservice.kochimetro.exception.BadRequestException;
 import com.microservice.kochimetro.exception.ResourceNotFoundException;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,11 +25,17 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final AuthMapper authMapper;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+    private final CustomUserDetailsService customUserDetailsService;
 
-    public AuthServiceImpl(UserRepository userRepository, AuthMapper authMapper, PasswordEncoder passwordEncoder) {
+    public AuthServiceImpl(UserRepository userRepository, AuthMapper authMapper, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService, CustomUserDetailsService customUserDetailsService) {
         this.userRepository = userRepository;
         this.authMapper = authMapper;
         this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
+        this.customUserDetailsService = customUserDetailsService;
     }
 
     @Override
@@ -52,17 +63,32 @@ public class AuthServiceImpl implements AuthService {
     public LoginResponse login(LoginRequest loginRequest) {
         log.info("Logging in user with email: {}", loginRequest.getEmail());
 
-        User user = userRepository
-                .findByEmail(loginRequest.getEmail())
-                .orElseThrow(
-                        () -> new ResourceNotFoundException("Invalid email or password"));
+        //now authentication is handled by authentication Manager
+        //this says that i will not authenticate and instead doAuthentication will authenticate
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getEmail(),
+                        loginRequest.getPassword()
+                )
+        );
 
-        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            throw new BadRequestException("Invalid email or password");
-        }
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+        String token = jwtService.generateToken(userDetails);
+
+        User user = userRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "User not found with email: " + loginRequest.getEmail()));
 
         log.info("User logged in successfully with email: {}", user.getEmail());
 
-        return authMapper.toLoginResponse(user);
+        LoginResponse response = authMapper.toLoginResponse(user);
+
+        response.setAccessToken(token);
+        response.setTokenType("Bearer");
+        response.setExpiresIn(jwtService.getJwtExpiration());
+
+        return response;
     }
 }
