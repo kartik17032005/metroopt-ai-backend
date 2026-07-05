@@ -1,13 +1,21 @@
 package com.microservice.kochimetro.branding.repository;
 
 import com.microservice.kochimetro.branding.entity.BrandingContract;
+import com.microservice.kochimetro.branding.entity.enums.BrandingStatus;
+import com.microservice.kochimetro.train.entity.Train;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface BrandingContractRepository extends JpaRepository<BrandingContract, UUID> {
     List<BrandingContract> findByTrainId(UUID trainId);
+
+    Optional<BrandingContract> findByTrainAndStatus(
+            Train train,
+            BrandingStatus status
+    );
 }
