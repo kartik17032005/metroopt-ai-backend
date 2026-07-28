@@ -21,11 +21,11 @@ server:
   port: 8080
 
 jwt:
-  secret: ${JWT_SECRET}
+  secret: ${JWT_SECRET:defaultSecretKeyWithAtLeast32CharactersForDevelopment!}
   expiration: 86400000 #24 hours
 
 gemini:
   api:
-    key: ${GEMINI_API_KEY}
+    key: ${GEMINI_API_KEY:}
     url: https://generativelanguage.googleapis.com/v1beta/models
   model: gemini-2.5-flash
