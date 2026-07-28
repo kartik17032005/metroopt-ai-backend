@@ -58,4 +58,25 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(apiResponse);
     }
+
+    @ExceptionHandler(org.springframework.web.bind.MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiResponse<Object>> handleValidationExceptions(
+            org.springframework.web.bind.MethodArgumentNotValidException ex) {
+        String errorMessage = ex.getBindingResult().getFieldErrors().stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .findFirst()
+                .orElse("Validation failed");
+
+        ApiResponse<Object> apiResponse = ApiResponse
+                .builder()
+                .message(errorMessage)
+                .success(false)
+                .data(null)
+                .timestamp(Instant.now())
+                .build();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(apiResponse);
+    }
 }

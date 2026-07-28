@@ -51,7 +51,7 @@ public class AuthServiceImpl implements AuthService {
         String hashedPassword = passwordEncoder.encode(registerRequest.getPassword());
 
         user.setPassword(hashedPassword);
-        user.setRole(Role.OPERATOR);
+        user.setRole(Role.ADMIN);
         user.setEnabled(true);
 
         User savedUser = userRepository.save(user);

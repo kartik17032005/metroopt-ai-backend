@@ -16,11 +16,7 @@ public class RegisterRequest {
     private String fullName;
 
     @NotBlank(message = "Email is required")
-    @Email(
-            regexp = "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}$",
-            flags = Pattern.Flag.CASE_INSENSITIVE,
-            message = "Email email format is invalid"
-    )
+    @Email(message = "Email format is invalid")
     private String email;
 
     @NotBlank(message = "Password is required")
