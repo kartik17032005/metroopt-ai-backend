@@ -9,6 +9,7 @@ import com.microservice.kochimetro.optimization.orTools.solver.BasicTrainSelecti
 import com.microservice.kochimetro.optimization.service.TrainDataBuilder;
 import com.microservice.kochimetro.train.entity.enums.Depot;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +30,7 @@ public class OptimizationController {
     private final BasicTrainSelectionSolver solver;
 
     @PostMapping("/run")
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public OptimizationResponse optimize(
             @RequestBody OptimizationRequest request
     ) {

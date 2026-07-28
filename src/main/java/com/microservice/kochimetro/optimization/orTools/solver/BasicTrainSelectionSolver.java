@@ -6,6 +6,7 @@ import com.google.ortools.sat.CpModel;
 import com.google.ortools.sat.CpSolver;
 import com.google.ortools.sat.CpSolverStatus;
 import com.google.ortools.sat.LinearExpr;
+import com.microservice.kochimetro.ai.service.AIExplanationService;
 import com.microservice.kochimetro.depot.entity.DepotResource;
 import com.microservice.kochimetro.optimization.dto.request.OptimizationRequest;
 import com.microservice.kochimetro.optimization.dto.response.OptimizationResponse;
@@ -18,7 +19,6 @@ import com.microservice.kochimetro.optimization.orTools.objective.*;
 import com.microservice.kochimetro.train.entity.enums.Depot;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +43,7 @@ public class BasicTrainSelectionSolver {
     private final FleetUtilizationObjective fleetUtilizationObjective;
     private final ObjectiveBuilder objectiveBuilder;
     private final DepotResourceConstraint depotResourceConstraint;
+    private final AIExplanationService aiExplanationService;
 
     public OptimizationResponse solve(
             OptimizationRequest request,
@@ -205,7 +206,9 @@ public class BasicTrainSelectionSolver {
                 boolean inspection =
                         solver.value(inspectionVariables[i]) == 1;
 
-                AllocationStatus allocationStatus;
+                AllocationStatus allocationStatus = null;
+
+
 
                 if (solver.value(trainVariables[i]) == 1) {
                     allocationStatus = AllocationStatus.OPERATING;
@@ -225,6 +228,11 @@ public class BasicTrainSelectionSolver {
                                 .build()
                 );
             }
+
+            aiExplanationService.enrichWithAIExplanations(
+                    trainDataList,
+                    selectedTrains
+            );
 
             return OptimizationResponse.builder()
                     .solverStatus(status.name())

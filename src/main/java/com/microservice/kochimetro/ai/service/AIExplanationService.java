@@ -1,11 +1,14 @@
 package com.microservice.kochimetro.ai.service;
 
-import com.microservice.kochimetro.optimization.orTools.AllocationStatus;
-import com.microservice.kochimetro.train.entity.Train;
+import com.microservice.kochimetro.optimization.dto.response.SelectedTrainResponse;
+import com.microservice.kochimetro.optimization.model.TrainData;
+
+import java.util.List;
+import java.util.Map;
 
 public interface AIExplanationService {
-    String generateExplanation(
-            Train train,
-            AllocationStatus allocationStatus
+    void enrichWithAIExplanations(
+            List<TrainData> trains,
+            List<SelectedTrainResponse> selectedTrains
     );
 }

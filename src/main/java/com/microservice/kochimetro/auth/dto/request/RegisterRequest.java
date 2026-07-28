@@ -31,6 +31,6 @@ public class RegisterRequest {
     @Pattern(regexp = "^\\d{10}$", message = "Phone number must be exactly 10 digits")
     private String phoneNumber;
 
-    @NotNull(message = "Role is required")
-    private Role role;
+//    @NotNull(message = "Role is required")
+//    private Role role;
 }

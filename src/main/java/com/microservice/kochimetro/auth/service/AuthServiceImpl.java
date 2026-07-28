@@ -7,6 +7,7 @@ import com.microservice.kochimetro.auth.dto.response.RegisterResponse;
 import com.microservice.kochimetro.auth.jwt.JwtService;
 import com.microservice.kochimetro.auth.mapper.AuthMapper;
 import com.microservice.kochimetro.auth.user.entity.User;
+import com.microservice.kochimetro.auth.user.entity.enums.Role;
 import com.microservice.kochimetro.auth.user.repository.UserRepository;
 import com.microservice.kochimetro.exception.BadRequestException;
 import com.microservice.kochimetro.exception.ResourceNotFoundException;
@@ -50,6 +51,7 @@ public class AuthServiceImpl implements AuthService {
         String hashedPassword = passwordEncoder.encode(registerRequest.getPassword());
 
         user.setPassword(hashedPassword);
+        user.setRole(Role.OPERATOR);
         user.setEnabled(true);
 
         User savedUser = userRepository.save(user);

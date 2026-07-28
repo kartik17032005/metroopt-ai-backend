@@ -61,7 +61,7 @@ public class JobCardController {
 
     //create job card
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ENGINEER', 'OPERATOR')")
     public ResponseEntity<ApiResponse<JobCardResponse>> createJobCard(@Valid @RequestBody CreateJobCardRequest jobCardRequest) {
         log.info("Creating job card...");
         JobCardResponse jobCardResponse = jobCardService.createJobCard(jobCardRequest);

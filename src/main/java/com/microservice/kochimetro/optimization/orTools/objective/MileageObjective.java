@@ -21,7 +21,6 @@ public class MileageObjective {
                       BoolVar[] trainVariables,
                       List<TrainData> trainDataList
     ) {
-
         LinearExprBuilder objective = LinearExpr.newBuilder();
 
         for (int i = 0; i < trainDataList.size(); i++) {

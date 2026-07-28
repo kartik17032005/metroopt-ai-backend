@@ -6,8 +6,6 @@ import com.microservice.kochimetro.branding.repository.BrandingContractRepositor
 import com.microservice.kochimetro.cleaning.entity.CleaningSlot;
 import com.microservice.kochimetro.cleaning.entity.enums.CleaningStatus;
 import com.microservice.kochimetro.cleaning.repository.CleaningSlotRepository;
-import com.microservice.kochimetro.depot.entity.DepotResource;
-import com.microservice.kochimetro.depot.repository.DepotResourceRepository;
 import com.microservice.kochimetro.fitness.entity.FitnessCertificate;
 import com.microservice.kochimetro.fitness.entity.enums.CertificateStatus;
 import com.microservice.kochimetro.fitness.repository.FitnessCertificateRepository;
@@ -100,14 +98,11 @@ public class TrainDataBuilder {
 
             if (hasCriticalMaintenance) {
                 inspectionPriority = 100;
-            }
-            else if (inspectionDue) {
+            } else if (inspectionDue) {
                 inspectionPriority = 80;
-            }
-            else if (mileage >= 7000) {
+            } else if (mileage >= 7000) {
                 inspectionPriority = 50;
-            }
-            else {
+            } else {
                 inspectionPriority = 10;
             }
 
