@@ -236,10 +236,16 @@ public class BasicTrainSelectionSolver {
                 );
             }
 
+            System.out.println("Before AI");
+
             aiExplanationService.enrichWithAIExplanations(
                     trainDataList,
                     selectedTrains
             );
+
+            System.out.println("After AI");
+
+            System.out.println("Returning Response");
 
             return OptimizationResponse.builder()
                     .solverStatus(status.name())
