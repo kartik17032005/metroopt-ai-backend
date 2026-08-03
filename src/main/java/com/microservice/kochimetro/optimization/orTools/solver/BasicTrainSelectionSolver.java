@@ -184,9 +184,16 @@ public class BasicTrainSelectionSolver {
             );
         }
 
+        System.out.println("Before creating solver");
+
         CpSolver solver = new CpSolver();
 
+        System.out.println("Before solve()");
+
         CpSolverStatus status = solver.solve(cpModel);
+
+        System.out.println("After solve()");
+        System.out.println("Solver Status = " + status);
 
         List<SelectedTrainResponse> selectedTrains = new ArrayList<>();
 
