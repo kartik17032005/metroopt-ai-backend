@@ -238,10 +238,10 @@ public class BasicTrainSelectionSolver {
 
             System.out.println("Before AI");
 
-            aiExplanationService.enrichWithAIExplanations(
-                    trainDataList,
-                    selectedTrains
-            );
+//            aiExplanationService.enrichWithAIExplanations(
+//                    trainDataList,
+//                    selectedTrains
+//            );
 
             System.out.println("After AI");
 
