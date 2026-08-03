@@ -3,9 +3,10 @@ spring:
     name: metroopt-backend
 
   datasource:
-    url: jdbc:mysql://localhost:3306/metroopt_ai
-    username: root
-    password: Kart@17032005
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
@@ -18,7 +19,7 @@ spring:
         format_sql: true
 
 server:
-  port: 8080
+  port: 4000
 
 jwt:
   secret: ${JWT_SECRET:defaultSecretKeyWithAtLeast32CharactersForDevelopment!}
