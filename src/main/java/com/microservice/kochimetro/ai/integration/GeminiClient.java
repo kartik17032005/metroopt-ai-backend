@@ -6,6 +6,7 @@ import com.microservice.kochimetro.ai.dto.GeminiRequest;
 import com.microservice.kochimetro.ai.dto.GeminiResponse;
 import com.microservice.kochimetro.ai.dto.Part;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -19,6 +20,7 @@ import java.util.List;
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class GeminiClient {
     private final RestClient restClient; // this is used for http
     private final GeminiProperties properties;
@@ -26,49 +28,55 @@ public class GeminiClient {
 
     public String generateContent(String prompt) {
         if (properties == null || properties.getApi() == null || properties.getApi().getKey() == null || properties.getApi().getKey().isBlank()) {
+            log.info("Gemini API key is not configured; using fallback explanations.");
             return null;
         }
 
-        //converting prompt into
-        //{"contents": [{parts:[{text}]}]}
-        GeminiRequest request = new GeminiRequest(
-                List.of(
-                        new Content(
-                                List.of(
-                                        new Part(prompt)
-                                )
-                        )
-                )
-        );
+        try {
+            //converting prompt into
+            //{"contents": [{parts:[{text}]}]}
+            GeminiRequest request = new GeminiRequest(
+                    List.of(
+                            new Content(
+                                    List.of(
+                                            new Part(prompt)
+                                    )
+                            )
+                    )
+            );
 
-        String url = properties.getApi().getUrl()
-                + "/"
-                + properties.getModel()
-                + ":generateContent?key="
-                + properties.getApi().getKey();
+            String url = properties.getApi().getUrl()
+                    + "/"
+                    + properties.getModel()
+                    + ":generateContent?key="
+                    + properties.getApi().getKey();
 
-        GeminiResponse response = restClient.post() //http post
-                .uri(url)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(request)
-                .retrieve()
-                .body(GeminiResponse.class);
+            GeminiResponse response = restClient.post() //http post
+                    .uri(url)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(request)
+                    .retrieve()
+                    .body(GeminiResponse.class);
 
 
-        if (response == null
-                || response.getCandidates() == null
-                || response.getCandidates().isEmpty()) {
+            if (response == null
+                    || response.getCandidates() == null
+                    || response.getCandidates().isEmpty()) {
 
+                return null;
+
+            }
+
+            return response.getCandidates()
+                    .getFirst()
+                    .getContent()
+                    .getParts()
+                    .getFirst()
+                    .getText();
+        } catch (Exception ex) {
+            log.warn("Gemini API call failed for model {}: {}", properties.getModel(), ex.getMessage());
             return null;
-
         }
-
-        return response.getCandidates()
-                .getFirst()
-                .getContent()
-                .getParts()
-                .getFirst()
-                .getText();
 
     }
 }
