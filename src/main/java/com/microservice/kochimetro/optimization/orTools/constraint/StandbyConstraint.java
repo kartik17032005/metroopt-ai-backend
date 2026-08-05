@@ -20,6 +20,7 @@ public class StandbyConstraint {
             List<TrainData> trains,
             int standbyCount
     ){
+        int eligibleCount = 0;
         for (int i = 0; i < trains.size(); i++) {
 
             TrainData train = trains.get(i);
@@ -27,13 +28,17 @@ public class StandbyConstraint {
             // Ineligible trains cannot become standby
             if (!train.isStandbyEligible()) {
                 model.addEquality(standby[i], 0);
+            } else {
+                eligibleCount++;
             }
         }
+
+        int targetStandbyCount = Math.min(standbyCount, eligibleCount);
 
         // Exactly N standby trains
         model.addEquality(
                 LinearExpr.sum(standby),
-                standbyCount
+                targetStandbyCount
         );
     }
 }

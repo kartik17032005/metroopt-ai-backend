@@ -40,19 +40,23 @@ public class DepotResourceConstraint {
                 }
             }
 
-            cpModel.addLessOrEqual(
-                    LinearExpr.sum(
-                            standbyVars.toArray(new BoolVar[0])
-                    ),
-                    resource.getStandbyTrackCapacity()
-            );
+            if (!standbyVars.isEmpty() && resource != null && resource.getStandbyTrackCapacity() != null) {
+                cpModel.addLessOrEqual(
+                        LinearExpr.sum(
+                                standbyVars.toArray(new BoolVar[0])
+                        ),
+                        resource.getStandbyTrackCapacity()
+                );
+            }
 
-            cpModel.addLessOrEqual(
-                    LinearExpr.sum(
-                            inspectionVars.toArray(new BoolVar[0])
-                    ),
-                    resource.getInspectionBayCapacity()
-            );
+            if (!inspectionVars.isEmpty() && resource != null && resource.getInspectionBayCapacity() != null) {
+                cpModel.addLessOrEqual(
+                        LinearExpr.sum(
+                                inspectionVars.toArray(new BoolVar[0])
+                        ),
+                        resource.getInspectionBayCapacity()
+                );
+            }
         }
     }
 }

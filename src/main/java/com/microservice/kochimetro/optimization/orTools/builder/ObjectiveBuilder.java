@@ -14,8 +14,12 @@ import java.util.Objects;
 @Component
 public class ObjectiveBuilder {
 
-    private final LinearExprBuilder objective =
+    private LinearExprBuilder objective =
             LinearExpr.newBuilder();
+
+    public void reset() {
+        this.objective = LinearExpr.newBuilder();
+    }
 
     // Dynamic weight map – allows runtime adjustment without hard‑coding order
     private final Map<ObjectiveWeight, Long> weightMap = new HashMap<>();

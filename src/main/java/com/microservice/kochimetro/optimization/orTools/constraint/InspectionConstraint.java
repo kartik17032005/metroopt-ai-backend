@@ -21,6 +21,7 @@ public class InspectionConstraint {
             List<TrainData> trains,
             int inspectionCount
     ) {
+        int eligibleCount = 0;
         for (int i = 0; i < trains.size(); i++) {
             TrainData train = trains.get(i);
 
@@ -32,13 +33,17 @@ public class InspectionConstraint {
 
             if (!eligibleForInspection) {
                 cpModel.addEquality(inspection[i], 0);
+            } else {
+                eligibleCount++;
             }
         }
 
-        // Exactly N trains must be sent for inspection
+        int targetInspectionCount = Math.min(inspectionCount, eligibleCount);
+
+        // Send up to targetInspectionCount trains for inspection
         cpModel.addEquality(
                 LinearExpr.sum(inspection),
-                inspectionCount
+                targetInspectionCount
         );
     }
 }

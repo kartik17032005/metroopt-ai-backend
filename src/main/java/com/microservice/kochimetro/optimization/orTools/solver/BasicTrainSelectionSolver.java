@@ -51,6 +51,8 @@ public class BasicTrainSelectionSolver {
             Map<Depot, DepotResource> depotResources
     ) {
 
+        objectiveBuilder.reset();
+
         CpModel cpModel = new CpModel();
 
         int numberOfTrains = trainDataList.size();
@@ -119,7 +121,7 @@ public class BasicTrainSelectionSolver {
                 trainVariables,
                 standbyVariables,
                 trainDataList,
-                request.getRequiredStandByTrains()
+                request.getRequiredStandByTrainsCount()
         );
 
         inspectionConstraint.apply(
@@ -128,7 +130,7 @@ public class BasicTrainSelectionSolver {
                 standbyVariables,
                 inspectionVariables,
                 trainDataList,
-                request.getRequiredInspectionTrains()
+                request.getRequiredInspectionTrainsCount()
         );
 
         depotResourceConstraint.apply(
@@ -143,9 +145,15 @@ public class BasicTrainSelectionSolver {
         // Operating Trains
         //--------------------------------------------------
 
+        long validOperatingCount = trainDataList.stream()
+                .filter(t -> t.isFitnessValid() && t.isCleaningCompleted() && !t.isCriticalMaintenance())
+                .count();
+
+        int targetOperatingTrains = (int) Math.min((long) request.getRequiredOperatingTrains(), validOperatingCount);
+
         cpModel.addEquality(
                 LinearExpr.sum(trainVariables),
-                request.getRequiredOperatingTrains()
+                targetOperatingTrains
         );
 
         //--------------------------------------------------
