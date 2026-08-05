@@ -30,7 +30,6 @@ public class OptimizationController {
     private final BasicTrainSelectionSolver solver;
 
     @PostMapping("/run")
-    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public OptimizationResponse optimize(
             @RequestBody OptimizationRequest request
     ) {
