@@ -25,15 +25,22 @@ public class AIExplanationServiceImpl implements AIExplanationService {
             List<TrainData> trains,
             List<SelectedTrainResponse> selectedTrains
     ) {
+        if (selectedTrains == null || selectedTrains.isEmpty()) {
+            return;
+        }
 
         try {
-
             String prompt = promptBuilder.buildPrompt(
                     trains,
                     selectedTrains
             );
 
             String response = geminiClient.generateContent(prompt);
+
+            if (response == null || response.isBlank()) {
+                applyFallbackExplanations(selectedTrains);
+                return;
+            }
 
             String[] lines = response.split("\\r?\\n");
 
@@ -58,14 +65,23 @@ public class AIExplanationServiceImpl implements AIExplanationService {
                 index++;
             }
 
-        } catch (Exception exception) {
+        } catch (Throwable throwable) {
 
-            log.error("Failed to generate AI explanations", exception);
+            log.error("Failed to generate AI explanations, falling back to standard explanations", throwable);
+            applyFallbackExplanations(selectedTrains);
+        }
+    }
 
-            for (SelectedTrainResponse selectedTrain : selectedTrains) {
-                selectedTrain.setExplanation(
-                        "AI explanation is currently unavailable."
-                );
+    private void applyFallbackExplanations(List<SelectedTrainResponse> selectedTrains) {
+        for (SelectedTrainResponse train : selectedTrains) {
+            if (train.getExplanation() == null || train.getExplanation().isBlank()) {
+                String status = train.getAllocationStatus() != null ? train.getAllocationStatus().name() : "DEPOT";
+                switch (status) {
+                    case "OPERATING" -> train.setExplanation("Selected for revenue operation based on optimal low mileage and valid fitness certificate.");
+                    case "STANDBY" -> train.setExplanation("Allocated as standby reserve based on depot readiness and safety protocols.");
+                    case "INSPECTION" -> train.setExplanation("Scheduled for routine maintenance inspection based on mileage accumulation.");
+                    default -> train.setExplanation("Retained at depot for stabling and scheduled maintenance.");
+                }
             }
         }
     }

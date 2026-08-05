@@ -25,6 +25,9 @@ public class GeminiClient {
 
 
     public String generateContent(String prompt) {
+        if (properties == null || properties.getApi() == null || properties.getApi().getKey() == null || properties.getApi().getKey().isBlank()) {
+            return null;
+        }
 
         //converting prompt into
         //{"contents": [{parts:[{text}]}]}
@@ -56,7 +59,7 @@ public class GeminiClient {
                 || response.getCandidates() == null
                 || response.getCandidates().isEmpty()) {
 
-            return "Unable to generate explanation.";
+            return null;
 
         }
 
