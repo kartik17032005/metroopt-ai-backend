@@ -32,9 +32,21 @@ public class GeminiClient {
             return null;
         }
 
+        String model = properties.getModel();
+        if (model == null || model.isBlank()) {
+            model = "gemini-2.0-flash";
+        }
+
+        String result = callModel(prompt, model);
+        if (result == null && !model.equals("gemini-1.5-flash")) {
+            log.info("Attempting Gemini fallback with gemini-1.5-flash");
+            result = callModel(prompt, "gemini-1.5-flash");
+        }
+        return result;
+    }
+
+    private String callModel(String prompt, String model) {
         try {
-            //converting prompt into
-            //{"contents": [{parts:[{text}]}]}
             GeminiRequest request = new GeminiRequest(
                     List.of(
                             new Content(
@@ -47,24 +59,24 @@ public class GeminiClient {
 
             String url = properties.getApi().getUrl()
                     + "/"
-                    + properties.getModel()
+                    + model
                     + ":generateContent?key="
                     + properties.getApi().getKey();
 
-            GeminiResponse response = restClient.post() //http post
+            GeminiResponse response = restClient.post()
                     .uri(url)
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(request)
                     .retrieve()
                     .body(GeminiResponse.class);
 
-
             if (response == null
                     || response.getCandidates() == null
-                    || response.getCandidates().isEmpty()) {
-
+                    || response.getCandidates().isEmpty()
+                    || response.getCandidates().getFirst().getContent() == null
+                    || response.getCandidates().getFirst().getContent().getParts() == null
+                    || response.getCandidates().getFirst().getContent().getParts().isEmpty()) {
                 return null;
-
             }
 
             return response.getCandidates()
@@ -74,9 +86,10 @@ public class GeminiClient {
                     .getFirst()
                     .getText();
         } catch (Exception ex) {
-            log.warn("Gemini API call failed for model {}: {}", properties.getModel(), ex.getMessage());
+            log.warn("Gemini API call failed for model {}: {}", model, ex.getMessage());
             return null;
         }
+    }
 
     }
 }

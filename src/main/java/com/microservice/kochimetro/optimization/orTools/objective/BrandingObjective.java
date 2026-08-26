@@ -24,14 +24,12 @@ public class BrandingObjective {
     ) {
 
         for (int i = 0; i < trainDataList.size(); i++) {
-
             TrainData train = trainDataList.get(i);
-
             if (train.isBranded()) {
-
-                objectiveBuilder.getObjective().addTerm(
+                objectiveBuilder.addWeightedTerm(
                         trainVariables[i],
-                        -OptimizationWeights.BRANDING_BONUS
+                        ObjectiveBuilder.ObjectiveWeight.BRANDING,
+                        -1L
                 );
             }
         }

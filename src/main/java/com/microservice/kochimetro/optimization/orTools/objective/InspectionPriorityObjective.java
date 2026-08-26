@@ -27,9 +27,8 @@ public class InspectionPriorityObjective {
             TrainData train = trainDataList.get(i);
             // Only trains that are due for inspection are considered by the constraint.
             // If a train is not due, the inspection variable is forced to 0, so adding a term has no effect.
-            long weight = train.getInspectionPriority() * OptimizationWeights.INSPECTION_PRIORITY_WEIGHT;
             // Negative weight to reward higher priority (minimization)
-            objectiveBuilder.getObjective().addTerm(inspectionVariables[i], -weight);
+            objectiveBuilder.addWeightedTerm(inspectionVariables[i], ObjectiveBuilder.ObjectiveWeight.INSPECTION, -train.getInspectionPriority());
         }
     }
 }

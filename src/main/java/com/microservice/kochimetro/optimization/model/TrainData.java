@@ -31,7 +31,7 @@ public class TrainData {
     private int inspectionPriority;
     private     Depot depot;
 
-    public boolean isBranded(){
-        return brandingStatus == BrandingStatus.ACTIVE;
+    public boolean isBranded() {
+        return brandingActive || brandingStatus == BrandingStatus.ACTIVE;
     }
 }

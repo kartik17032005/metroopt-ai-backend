@@ -29,9 +29,8 @@ public class StandbyPriorityObjective {
             if (!train.isStandbyEligible()) {
                 continue; // Ineligible trains are handled by constraints
             }
-            long weight = train.getMileage() * OptimizationWeights.STANDBY_PRIORITY_WEIGHT;
             // Add positive penalty (minimize) for mileage in standby
-            objectiveBuilder.getObjective().addTerm(standbyVariables[i], weight);
+            objectiveBuilder.addWeightedTerm(standbyVariables[i], ObjectiveBuilder.ObjectiveWeight.STANDBY, train.getMileage());
         }
     }
 }

@@ -13,5 +13,8 @@ import java.util.UUID;
 public interface MileageRecordRepository extends JpaRepository<MileageRecord, UUID> {
     List<MileageRecord> findByTrainId(UUID trainId);
 
+    //cleaner version to use regression model
+    List<MileageRecord> findByTrainIdOrderByRecordedAtAsc(UUID trainId);
+
     Optional<MileageRecord> findTopByTrainOrderByRecordedAtDesc(Train train);
 }

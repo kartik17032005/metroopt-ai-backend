@@ -28,6 +28,10 @@ public class OptimizationRequest {
     @JsonAlias({"required_inspection_trains"})
     private Integer requiredInspectionTrains;
 
+    @JsonProperty("algorithm")
+    @JsonAlias({"strategy", "optimization_algorithm", "optimizationAlgorithm"})
+    private String algorithm;
+
     public int getRequiredStandByTrainsCount() {
         return requiredStandByTrains != null ? requiredStandByTrains : 0;
     }

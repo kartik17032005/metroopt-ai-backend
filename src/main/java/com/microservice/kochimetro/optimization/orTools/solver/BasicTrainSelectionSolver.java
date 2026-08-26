@@ -51,7 +51,7 @@ public class BasicTrainSelectionSolver {
             Map<Depot, DepotResource> depotResources
     ) {
 
-        objectiveBuilder.reset();
+        objectiveBuilder.configureStrategy(request.getAlgorithm());
 
         CpModel cpModel = new CpModel();
 
@@ -166,6 +166,21 @@ public class BasicTrainSelectionSolver {
         );
 
         brandingObjective.apply(
+                trainVariables,
+                trainDataList
+        );
+
+        standbyPriorityObjective.apply(
+                standbyVariables,
+                trainDataList
+        );
+
+        inspectionPriorityObjective.apply(
+                inspectionVariables,
+                trainDataList
+        );
+
+        fleetUtilizationObjective.apply(
                 trainVariables,
                 trainDataList
         );

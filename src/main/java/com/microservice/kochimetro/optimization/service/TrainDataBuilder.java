@@ -117,6 +117,7 @@ public class TrainDataBuilder {
                     .inspectionDue(inspectionDue)
                     .inspectionPriority(inspectionPriority)
                     .brandingActive(brandingActive)
+                    .brandingStatus(brandingContract.map(BrandingContract::getStatus).orElse(null))
                     .standbyEligible(standbyEligible)
                     .build();
 

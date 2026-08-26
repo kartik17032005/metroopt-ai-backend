@@ -24,12 +24,10 @@ public class MileageObjective {
         LinearExprBuilder objective = LinearExpr.newBuilder();
 
         for (int i = 0; i < trainDataList.size(); i++) {
-            TrainData train = trainDataList.get(i);
-
-            //mileage * train1
-            objectiveBuilder.getObjective().addTerm(
+            objectiveBuilder.addWeightedTerm(
                     trainVariables[i],
-                    trainDataList.get(i).getMileage() * OptimizationWeights.BRANDING_BONUS
+                    ObjectiveBuilder.ObjectiveWeight.MILEAGE,
+                    trainDataList.get(i).getMileage()
             );
         }
 
