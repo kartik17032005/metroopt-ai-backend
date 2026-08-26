@@ -90,6 +90,4 @@ public class GeminiClient {
             return null;
         }
     }
-
-    }
 }
